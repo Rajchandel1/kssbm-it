@@ -20,41 +20,39 @@ const GALLERY_ITEMS = [
   {
     title: "Annual Tech Fest",
     date: "March 2025",
-    img: "https://images.unsplash.com/photo-1540575467063-6a71b3c5f83c?w=800&h=600&fit=crop",
-    tag: "Tech",
+    img: "https://i.pinimg.com/736x/7d/de/52/7dde5214a046e81cd05a49f8a5c9c123.jpg",
   },
   {
     title: "Convocation Ceremony",
     date: "April 2025",
-    img: "https://images.unsplash.com/photo-1523050854058-8df90110c476?w=800&h=600&fit=crop",
+    img: "https://i.pinimg.com/736x/3b/9d/ed/3b9dede6f7f156955bbc9ea84848f35a.jpg",
     tag: "Graduation",
   },
   {
     title: "Cultural Night",
     date: "February 2025",
-    img: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&h=600&fit=crop",
+    img: "https://i.pinimg.com/736x/18/f9/03/18f903e93828ba712411609ae91163f6.jpg",
     tag: "Culture",
   },
   {
     title: "Sports Day",
     date: "January 2025",
-    img: "https://images.unsplash.com/photo-1574623907931-3a625cf75580?w=800&h=600&fit=crop",
+    img: "https://i.pinimg.com/736x/0f/e9/84/0fe984a1e10c7394f44b6b396cea17a5.jpg",
     tag: "Sports",
   },
   {
     title: "Workshop Series",
     date: "December 2024",
-    img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop",
+    img: "https://i.pinimg.com/736x/4b/51/15/4b51152ec6dfdeadbc157fc31c4c414f.jpg",
     tag: "Academic",
   },
   {
     title: "Fresher's Welcome",
     date: "August 2024",
-    img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop",
+    img: "https://i.pinimg.com/736x/6a/5c/92/6a5c92ded9d756ae4899a01854f936e2.jpg",
     tag: "Community",
   },
 ];
-
 const BENTO_CLASSES = [
   "gal-bento-1", // 2col, 2row (top-left)
   "gal-bento-2", // 1col, 1row (top-right)

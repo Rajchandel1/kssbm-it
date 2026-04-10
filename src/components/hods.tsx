@@ -92,21 +92,89 @@ export const HODs = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-zinc-50 py-20 md:py-0"
+      className="relative bg-gradient-to-br from-zinc-50 via-white to-zinc-100 py-20 md:py-0"
     >
+      {/* Decorative SVG Background - Purely Visual, No Functionality Impact */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <svg className="absolute h-full w-full" preserveAspectRatio="none">
+          {/* Elegant flowing lines */}
+          <path
+            d="M0,200 Q300,100 600,300 T1200,200"
+            fill="none"
+            stroke="url(#lineGrad1)"
+            strokeWidth="0.5"
+            opacity="0.3"
+          />
+          <path
+            d="M0,400 Q400,500 800,300 T1200,450"
+            fill="none"
+            stroke="url(#lineGrad2)"
+            strokeWidth="0.3"
+            opacity="0.2"
+          />
+          <path
+            d="M0,600 Q500,400 900,550 T1200,600"
+            fill="none"
+            stroke="url(#lineGrad1)"
+            strokeWidth="0.4"
+            opacity="0.15"
+          />
+          
+          {/* Decorative circles */}
+          <circle cx="15%" cy="25%" r="80" fill="none" stroke="#d4a373" strokeWidth="0.3" opacity="0.15" />
+          <circle cx="85%" cy="70%" r="120" fill="none" stroke="#a78bfa" strokeWidth="0.3" opacity="0.1" />
+          <circle cx="50%" cy="50%" r="200" fill="none" stroke="#e9c46a" strokeWidth="0.2" opacity="0.08" />
+          
+          {/* Geometric diamond patterns */}
+          <path d="M100,100 L120,80 L140,100 L120,120 Z" fill="none" stroke="#d4a373" strokeWidth="0.3" opacity="0.2" />
+          <path d="M1050,650 L1070,630 L1090,650 L1070,670 Z" fill="none" stroke="#d4a373" strokeWidth="0.3" opacity="0.2" />
+          <path d="M550,150 L565,135 L580,150 L565,165 Z" fill="none" stroke="#a78bfa" strokeWidth="0.3" opacity="0.15" />
+          
+          {/* Gradients */}
+          <defs>
+            <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#d4a373" stopOpacity="0" />
+              <stop offset="50%" stopColor="#d4a373" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#d4a373" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="lineGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#a78bfa" stopOpacity="0" />
+              <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Subtle dot pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, #000 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}
+        />
+        
+        {/* Soft gradient orbs */}
+        <div className="absolute -left-20 top-20 h-64 w-64 rounded-full bg-amber-200/15 blur-3xl" />
+        <div className="absolute -right-20 bottom-20 h-80 w-80 rounded-full bg-purple-200/15 blur-3xl" />
+      </div>
+
       {/* Subtle heading - mobile only shows on top */}
       <motion.p
-        className="mb-10 text-center text-xs font-light uppercase tracking-[0.5em] text-zinc-400 md:hidden"
+        className="relative mb-10 text-center text-xs font-light uppercase tracking-[0.5em] text-zinc-500 md:hidden"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        The People Behind
+        <span className="relative inline-block">
+          The People Behind
+          <span className="absolute -bottom-2 left-1/2 h-px w-12 -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-300 to-transparent" />
+        </span>
       </motion.p>
 
       {/* Mobile: Simple vertical stack */}
-      <div className="flex flex-col items-center gap-8 md:hidden">
+      <div className="relative flex flex-col items-center gap-8 md:hidden">
         <HODCard
           name="Dr. Rajesh K. Sharma"
           role="Dean & Director"
@@ -135,13 +203,16 @@ export const HODs = () => {
       >
         <div className="sticky top-0 flex h-screen w-full flex-col items-center justify-center overflow-hidden">
           <motion.p
-            className="absolute left-1/2 top-[10%] -translate-x-1/2 text-sm font-light uppercase tracking-[0.5em] text-zinc-400"
+            className="absolute left-1/2 top-[10%] -translate-x-1/2 text-sm font-light uppercase tracking-[0.5em] text-zinc-500"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            The People Behind
+            <span className="relative inline-block">
+              The People Behind
+              <span className="absolute -bottom-3 left-1/2 h-px w-16 -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-300 to-transparent" />
+            </span>
           </motion.p>
 
           {/* Three cards - all centered via CSS, GSAP only animates Y/X */}
@@ -190,7 +261,7 @@ export const HODs = () => {
 };
 
 /* -----------------------------------------------
-   HOD CARD
+   HOD CARD - Enhanced UI with Zero Functionality Change
    ----------------------------------------------- */
 const HODCard = ({
   name,
@@ -205,18 +276,27 @@ const HODCard = ({
   isMain?: boolean;
   mobile?: boolean;
 }) => (
-  <div className="hod-card-wrapper hod-card-item text-center">
+  <div className="hod-card-wrapper hod-card-item group text-center">
     <div
-      className={`relative overflow-hidden rounded-2xl ${
+      className={`relative overflow-hidden rounded-2xl transition-all duration-500 ${
         isMain
-          ? 'shadow-xl ring-1 ring-zinc-100'
-          : 'shadow-md'
+          ? 'shadow-2xl shadow-amber-100/40 ring-1 ring-amber-200/30'
+          : 'shadow-xl shadow-zinc-200/30 ring-1 ring-zinc-200/30'
       }`}
     >
+      {/* Decorative border accents */}
+      <div className="absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-br from-amber-300/0 via-amber-300/0 to-amber-300/0 transition-all duration-500 group-hover:from-amber-300/20 group-hover:via-transparent group-hover:to-purple-300/20" />
+      
+      {/* Corner decorations */}
+      <div className="absolute left-2 top-2 h-3 w-3 border-l border-t border-amber-300/0 transition-all duration-300 group-hover:border-amber-300/40" />
+      <div className="absolute right-2 top-2 h-3 w-3 border-r border-t border-amber-300/0 transition-all duration-300 group-hover:border-amber-300/40" />
+      <div className="absolute bottom-2 left-2 h-3 w-3 border-b border-l border-amber-300/0 transition-all duration-300 group-hover:border-amber-300/40" />
+      <div className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-amber-300/0 transition-all duration-300 group-hover:border-amber-300/40" />
+      
       <img
         src={img}
         alt={name}
-        className={`hod-card-photo w-full object-cover ${
+        className={`hod-card-photo w-full object-cover transition-all duration-700 group-hover:scale-105 ${
           mobile
             ? 'aspect-[3/4]'
             : isMain
@@ -226,18 +306,32 @@ const HODCard = ({
         style={mobile ? { width: isMain ? '240px' : '200px' } : undefined}
         referrerPolicy="no-referrer"
       />
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-1/5 bg-gradient-to-t from-black/8 to-transparent" />
+      
+      {/* Gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-black/3 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      
+      {/* Subtle shine effect */}
+      <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
     </div>
+    
     <div className="hod-card-info mt-5 px-3">
-      <div className="mx-auto mb-3 h-[1px] w-8 bg-zinc-300" />
+      <div className="relative mx-auto mb-3">
+        <div className="h-px w-8 bg-gradient-to-r from-transparent via-amber-300/50 to-transparent transition-all duration-300 group-hover:w-12" />
+        <div className="absolute -bottom-0.5 left-1/2 h-px w-4 -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent" />
+      </div>
+      
       <p
-        className={`font-semibold tracking-tight text-zinc-900 ${
+        className={`relative font-semibold tracking-tight text-zinc-800 transition-colors duration-300 group-hover:text-zinc-900 ${
           isMain ? 'text-base' : 'text-sm'
         }`}
       >
-        {name}
+        <span className="relative inline-block">
+          {name}
+          <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-transparent via-amber-400 to-transparent transition-all duration-500 group-hover:w-full" />
+        </span>
       </p>
-      <p className="mt-1 text-[9px] font-light uppercase tracking-[0.18em] text-zinc-400">
+      
+      <p className="mt-1 text-[9px] font-light uppercase tracking-[0.18em] text-zinc-400 transition-colors duration-300 group-hover:text-zinc-500">
         {role}
       </p>
     </div>

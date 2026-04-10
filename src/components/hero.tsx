@@ -25,34 +25,34 @@ export const Hero = () => (
 );
 
 /* -----------------------------------------------
-   CENTER IMAGE
-   Subtle scale settling as loader fades.
-   No blur, no brightness tricks - just
-   a gentle zoom-out that says "we are here."
+   CENTER VIDEO (with cinematic dimming overlay)
    ----------------------------------------------- */
 const CenterImage = () => {
   const { scrollY } = useScroll();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const clip1 = useTransform(scrollY, [0, 1500], [25, 0]);
-  const clip2 = useTransform(scrollY, [0, 1500], [75, 100]);
-  const clipPath = useMotionTemplate`polygon(${clip1}% ${clip1}%, ${clip2}% ${clip1}%, ${clip2}% ${clip2}%, ${clip1}% ${clip2}%)`;
-
-  const backgroundSize = useTransform(
-    scrollY,
-    [0, SECTION_HEIGHT + 500],
-    ["170%", "100%"]
-  );
-
-  const scrollOpacity = useTransform(
+  // Scale + fade out
+  const scale = useTransform(scrollY, [0, 1500], [1.5, 1]);
+  const opacity = useTransform(
     scrollY,
     [SECTION_HEIGHT, SECTION_HEIGHT + 500],
     [1, 0]
   );
 
+  // 🌘 Dark overlay opacity (main effect)
+  const overlayOpacity = useTransform(
+    scrollY,
+    [0, 600, 1200],
+    [0, 0.35, 0.55] // tweak for stronger/weaker dim
+  );
+
   return (
-    <div className="sticky top-0 h-screen w-full overflow-hidden">
+    <div
+      ref={containerRef}
+      className="sticky top-0 h-screen w-full overflow-hidden"
+    >
       <motion.div
-        className="h-full w-full"
+        className="h-full w-full will-change-transform"
         initial={{ scale: 1.04 }}
         animate={{ scale: 1 }}
         transition={{
@@ -62,17 +62,28 @@ const CenterImage = () => {
         }}
       >
         <motion.div
-          className="h-full w-full"
+          className="absolute inset-0 will-change-transform"
           style={{
-            clipPath,
-            backgroundSize,
-            opacity: scrollOpacity,
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
+            scale,
+            opacity,
           }}
-        />
+        >
+          {/* 🎥 Background Video */}
+          <video
+            src="clg.mp4"
+            className="h-full w-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+
+          {/* 🌘 Cinematic Dark Overlay */}
+          <motion.div
+            className="absolute inset-0 bg-black pointer-events-none"
+            style={{ opacity: overlayOpacity }}
+          />
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -89,28 +100,28 @@ const ParallaxImages = () => (
     transition={{ duration: 1, delay: 1.5, ease: [0.22, 1, 0.36, 1] }}
   >
     <ParallaxImg
-      src="https://images.unsplash.com/photo-1523050854058-8df90110c476?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      src="https://i.pinimg.com/736x/3a/7d/08/3a7d084a604f586932598e6d7251f255.jpg"
       alt="Students studying"
       start={-200}
       end={200}
       className="w-1/3"
     />
     <ParallaxImg
-      src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      src="https://i.pinimg.com/736x/7f/d4/1f/7fd41fc5bf889c5ea953649ade847942.jpg"
       alt="Modern campus"
       start={200}
       end={-250}
       className="mx-auto w-2/3"
     />
     <ParallaxImg
-      src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=2670&auto=format&fit=crop"
       alt="Graduation ceremony"
       start={-200}
       end={200}
       className="ml-auto w-1/3"
     />
     <ParallaxImg
-      src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop"
       alt="Classroom session"
       start={0}
       end={-500}
@@ -127,7 +138,16 @@ interface ParallaxImgProps {
   end: number;
 }
 
-const ParallaxImg = ({ className, alt, src, start, end }: ParallaxImgProps) => {
+/* -----------------------------------------------
+   INDIVIDUAL PARALLAX IMAGE
+   ----------------------------------------------- */
+const ParallaxImg = ({
+  className,
+  alt,
+  src,
+  start,
+  end,
+}: ParallaxImgProps) => {
   const ref = useRef<HTMLImageElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -138,6 +158,7 @@ const ParallaxImg = ({ className, alt, src, start, end }: ParallaxImgProps) => {
   const opacity = useTransform(scrollYProgress, [0.75, 1], [1, 0]);
   const scale = useTransform(scrollYProgress, [0.75, 1], [1, 0.85]);
   const y = useTransform(scrollYProgress, [0, 1], [start, end]);
+
   const transform = useMotionTemplate`translateY(${y}px) scale(${scale})`;
 
   return (

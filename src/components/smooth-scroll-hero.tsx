@@ -7,7 +7,7 @@ import { SchoolTitle } from "./school-title";
 import { Programs } from "./programs";
 import { HODs } from "./hods";
 import { Gallery } from "./gallery";
-import { Infrastructure } from "./infrastructure";
+import  Infrastructure  from "./infrastructure";
 import { HorizontalSections } from "./horizontal-sections";
 import { CurtainFooter } from "./curtain-footer";
 import { SeminarContent } from "./seminars";
