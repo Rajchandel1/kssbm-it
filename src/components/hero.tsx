@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useScroll,
   useTransform,
-  useMotionTemplate,
 } from "framer-motion";
 
 const SECTION_HEIGHT = 1500;
@@ -30,8 +29,9 @@ export const Hero = () => (
 const CenterImage = () => {
   const { scrollY } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
-  // Scale + fade out
+  // Scale + fade out - GPU accelerated
   const scale = useTransform(scrollY, [0, 1500], [1.5, 1]);
   const opacity = useTransform(
     scrollY,
@@ -39,52 +39,59 @@ const CenterImage = () => {
     [1, 0]
   );
 
-  // 🌘 Dark overlay opacity (main effect)
+  // 🌘 Dark overlay opacity - simplified
   const overlayOpacity = useTransform(
     scrollY,
     [0, 600, 1200],
-    [0, 0.35, 0.55] // tweak for stronger/weaker dim
+    [0, 0.35, 0.55]
   );
 
   return (
     <div
       ref={containerRef}
-      className="sticky top-0 h-screen w-full overflow-hidden"
+      className="sticky top-0 h-screen w-full overflow-hidden bg-black"
     >
+      {/* Video Container with fade-in + scroll zoom */}
       <motion.div
-        className="h-full w-full will-change-transform"
-        initial={{ scale: 1.04 }}
-        animate={{ scale: 1 }}
-        transition={{
-          duration: 1.6,
-          delay: 1.2,
-          ease: [0.22, 1, 0.36, 1],
+        className="h-full w-full"
+        initial={{ opacity: 0, scale: 1.04 }}
+        animate={{ 
+          opacity: videoLoaded ? 1 : 0,
+          scale: videoLoaded ? 1 : 1.04 
+        }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          scale: videoLoaded ? scale : undefined,
+          opacity: videoLoaded ? opacity : undefined,
+          transformOrigin: "center center",
+          willChange: "transform",
         }}
       >
-        <motion.div
-          className="absolute inset-0 will-change-transform"
-          style={{
-            scale,
-            opacity,
+        {/* 🎥 Background Video - optimized */}
+        <video
+          src="clg.mp4"
+          className="h-full w-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          onLoadedData={() => setVideoLoaded(true)}
+          style={{ 
+            transform: "translateZ(0)",
+            willChange: "transform"
           }}
-        >
-          {/* 🎥 Background Video */}
-          <video
-            src="clg.mp4"
-            className="h-full w-full object-cover"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-
-          {/* 🌘 Cinematic Dark Overlay */}
-          <motion.div
-            className="absolute inset-0 bg-black pointer-events-none"
-            style={{ opacity: overlayOpacity }}
-          />
-        </motion.div>
+        />
       </motion.div>
+
+      {/* 🌘 Cinematic Dark Overlay - separate layer */}
+      <motion.div
+        className="absolute inset-0 bg-black pointer-events-none"
+        style={{ 
+          opacity: overlayOpacity,
+          willChange: "opacity",
+        }}
+      />
     </div>
   );
 };
@@ -159,15 +166,25 @@ const ParallaxImg = ({
   const scale = useTransform(scrollYProgress, [0.75, 1], [1, 0.85]);
   const y = useTransform(scrollYProgress, [0, 1], [start, end]);
 
-  const transform = useMotionTemplate`translateY(${y}px) scale(${scale})`;
-
   return (
-    <motion.img
-      src={src}
-      alt={alt}
+    <motion.div
       className={className}
       ref={ref}
-      style={{ transform, opacity }}
-    />
+      style={{ 
+        y,
+        scale,
+        opacity,
+        willChange: "transform",
+        transformOrigin: "center center",
+      }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-auto"
+        loading="lazy"
+        decoding="async"
+      />
+    </motion.div>
   );
 };
